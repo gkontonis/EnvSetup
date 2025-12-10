@@ -1,0 +1,125 @@
+# NOTE: Update [user] section with your credentials
+# Or create ~/.gitconfig_local with your user info
+[user]
+    name = YOUR_NAME
+    email = YOUR_EMAIL
+
+[alias]
+    rso = remote show origin
+    me = config user.name
+    a = add
+    aa = add .
+    aaa = add --all
+    au = add --update
+    b = branch
+    bd = branch --delete 
+    c = commit
+    cm = commit --message
+    cf = commit --fixup
+
+    # checkout
+    co = checkout
+    cob = checkout -b
+    com = checkout main
+    cos = checkout staging
+    cod = checkout develop
+    d = diff
+    da = diff HEAD
+    i = init
+
+    # log aliases
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    lg = log --graph --oneline --decorate --all
+    ld = log --pretty=format:"%h %ad %s" --date=short --all
+    graph = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    
+    # merge
+    m = merge --no-ff
+    ma = merge --abort
+    mc = merge --continue
+
+    # pull / rebase
+    p = pull
+    pr = pull --rebase
+    r = rebase
+    ir = rebase -i HEAD~
+
+    # status
+    s = status
+    ss = status --short
+    stat = show --stat --oneline
+
+    # stash
+    st = stash
+    sta = stash apply
+    std = stash drop
+    stl = stash list
+    stp = stash pop
+    sts = stash save
+
+    # utilities
+    top = !git rev-parse --show-toplevel
+    branch-name = "!git rev-parse --abbrev-ref HEAD"
+    publish = "!git push -u origin $(git branch-name)"
+    undo = reset --soft HEAD~1
+    amend = commit --amend --no-edit
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+
+[color "status"]
+    added = green
+    changed = blue
+    untracked = red
+
+[grep]
+    lineNumber = true
+
+[core]
+    excludesfile = ~/.gitignore_global
+    autocrlf = input
+    editor = code --wait
+
+[merge]
+    tool = vscode
+
+[mergetool]
+    keepBackup = false
+    keepTemporaries = false
+    writeToTemp = true
+    prompt = false
+
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
+
+[diff]
+    tool = vscode
+
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+
+[init]
+    defaultBranch = main
+
+[push]
+    followTags = true
+    autoSetupRemote = true
+
+[pull]
+    rebase = true
+
+[fetch]
+    prune = true
+
+[format]
+    pretty = %C(green)%h%C(red)%d %C(yellow)%ar %C(white)%s %C(blue)(%an)
+
+[pretty]
+    custom = "%C(green)%h%C(red)%d %C(yellow)%ar %C(white)%s %C(blue)(%an)"
+
+# Allow local customizations
+[include]
+    path = ~/.gitconfig_local

@@ -1,0 +1,13 @@
+# Local Git Configuration
+# This file is included by .gitconfig and contains personal/sensitive data
+# DO NOT commit this file to version control
+
+[user]
+    name = YOUR_NAME_HERE
+    email = YOUR_EMAIL_HERE
+
+# Optional: GPG signing
+# [user]
+#     signingkey = YOUR_GPG_KEY_ID
+# [commit]
+#     gpgsign = true

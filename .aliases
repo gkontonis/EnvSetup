@@ -1,0 +1,254 @@
+# ============================================================================
+# GENERAL ALIASES
+# ============================================================================
+
+# Directory listing aliases
+alias lt='ls --human-readable --size -1 -S --classify'
+alias la='ls -Alh'
+alias ls='ls -aFh --color=always'
+alias lx='ls -lXBh'
+alias lk='ls -lSrh'
+alias lc='ls -lcrh'
+alias lu='ls -lurh'
+alias lr='ls -lRh'
+alias lm='ls -alh | more'
+alias lw='ls -xAh'
+alias ll='ls -Fls'
+alias labc='ls -lap'
+alias lf="ls -l | egrep -v '^d'"
+alias ldir="ls -l | egrep '^d'"
+alias left='ls -t -1'
+
+# Package manager shortcuts
+alias p="pnpm"
+
+# Maven shortcuts
+alias msr="mvn spring-boot:run"
+alias mci="mvn clean install -DskipTests"
+alias mcit="mvn clean install"
+alias mcp="mvn clean package -DskipTests"
+
+# Search command line history
+alias h="history | grep "
+
+# Process management
+alias topcpu="/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
+
+# Network
+alias openports='netstat -nape --inet'
+
+# System
+alias rebootsafe='sudo shutdown -r now'
+alias rebootforce='sudo shutdown -r -n now'
+
+# Disk space
+alias diskspace="du -S | sort -n -r | more"
+alias folders='du -h --max-depth=1'
+alias folderssort='find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
+alias tree='tree -CAhF --dirsfirst'
+alias treed='tree -CAFd'
+alias mountedinfo='df -hT'
+
+# File operations (safe)
+alias mv="mv -i"
+alias cp="cp -i"
+alias cpv='rsync -ah --info=progress2'
+
+# Archive
+alias untar='tar -zxvf '
+
+# Network tools
+alias wget='wget -c '
+alias ipe='curl ipinfo.io/ip'
+
+# Python virtual environment (Linux paths)
+alias svenv='source venv/bin/activate'
+alias sdea='deactivate'
+
+# Clear
+alias cls='clear'
+alias cl='clear'
+
+# Reload shell config
+alias resource="source ~/.bashrc"
+
+# Navigation shortcuts
+alias cd..='cd ..'
+alias ..='cd ..'
+alias ...='cd ../../../'
+alias ....='cd ../../../../'
+alias .....='cd ../../../../..'
+alias .2='cd ../../'
+alias .4='cd ../../../../'
+alias .5='cd ../../../../..'
+
+# ============================================================================
+# FUNCTIONS
+# ============================================================================
+
+# cd with auto-ls
+function cd() {
+    DIR="$*"
+    if [ $# -lt 1 ]; then
+        DIR=$HOME
+    fi
+    builtin cd "${DIR}" && ls -F --color=auto
+}
+
+# Show network information
+netinfo() {
+    echo "--------------- Network Information ---------------"
+    ip -4 addr show | grep inet
+    echo "---------------------------------------------------"
+}
+
+# Extract any archive
+extract() {
+    for archive in "$@"; do
+        if [ -f "$archive" ]; then
+            case $archive in
+                *.tar.bz2)   tar xvjf "$archive"    ;;
+                *.tar.gz)    tar xvzf "$archive"    ;;
+                *.bz2)       bunzip2 "$archive"     ;;
+                *.rar)       unrar x "$archive"     ;;
+                *.gz)        gunzip "$archive"      ;;
+                *.tar)       tar xvf "$archive"     ;;
+                *.tbz2)      tar xvjf "$archive"    ;;
+                *.tgz)       tar xvzf "$archive"    ;;
+                *.zip)       unzip "$archive"       ;;
+                *.Z)         uncompress "$archive"  ;;
+                *.7z)        7z x "$archive"        ;;
+                *)           echo "don't know how to extract '$archive'..." ;;
+            esac
+        else
+            echo "'$archive' is not a valid file!"
+        fi
+    done
+}
+
+# Create directory and cd into it
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# ============================================================================
+# GIT ALIASES
+# ============================================================================
+
+alias startgit='cd `git rev-parse --show-toplevel` && git checkout main && git pull'
+alias cg='cd `git rev-parse --show-toplevel`'
+
+alias ga='git add'
+alias gaa='git add .'
+alias gaaa='git add --all'
+alias gau='git add --update'
+alias gb='git branch'
+alias gbd='git branch --delete'
+alias gc='git commit'
+alias gcm='git commit --message'
+alias gcf='git commit --fixup'
+alias gco='git checkout'
+alias gcob='git checkout -b'
+alias gcom='git checkout main'
+alias gcos='git checkout staging'
+alias gcod='git checkout develop'
+alias gd='git diff'
+alias gda='git diff HEAD'
+alias gi='git init'
+alias glg='git log --graph --oneline --decorate --all'
+alias gld='git log --graph --date=short --decorate --all'
+alias gm='git merge --no-ff'
+alias gma='git merge --abort'
+alias gmc='git merge --continue'
+alias gp='git pull'
+alias gpr='git pull --rebase'
+alias gr='git rebase'
+alias gs='git status'
+alias gss='git status --short'
+alias gst='git stash'
+alias gsta='git stash apply'
+alias gstd='git stash drop'
+alias gstl='git stash list'
+alias gstp='git stash pop'
+alias gsts='git stash save'
+alias gpub='git push -u origin $(git rev-parse --abbrev-ref HEAD)'
+
+# Git log find by commit message
+glf() { git log --all --grep="$1"; }
+
+# Git checkout remote branch
+gcor() {
+    if [ -n "$1" ]; then
+        if git show-ref -q --heads "$1"; then
+            git checkout "$1"
+        else
+            git fetch origin "$1"
+            git checkout -t "origin/$1"
+        fi
+    else
+        echo "Unspecified branch name"
+    fi
+}
+
+# ============================================================================
+# DOCKER ALIASES
+# ============================================================================
+
+alias dc="docker compose"
+alias dcu="docker compose up -d"
+alias dcd="docker compose down"
+alias dcs="docker compose stop"
+alias dcl="docker compose logs -f"
+alias dps="docker ps"
+alias dpsa="docker ps -a"
+alias dim="docker images"
+alias dsp="docker system prune --all"
+
+# Docker functions
+dex() { docker exec -it "$1" "${2:-bash}"; }
+di() { docker inspect "$1"; }
+dl() { docker logs -f "$1"; }
+drun() { docker run -it "$1" "$2"; }
+
+dsr() {
+    docker stop "$1"
+    docker rm "$1"
+}
+
+drmc() {
+    docker rm $(docker ps --all -q -f status=exited)
+}
+
+drmid() {
+    local imgs=$(docker images -q -f dangling=true)
+    [ -n "$imgs" ] && docker rmi $imgs || echo "no dangling images."
+}
+
+dnames() {
+    for ID in $(docker ps -q); do
+        docker inspect "$ID" | grep Name | head -1 | awk '{print $2}' | sed 's/[,"/]//g'
+    done
+}
+
+dip() {
+    echo "IP addresses of all named running containers"
+    for DOC in $(dnames); do
+        IP=$(docker inspect "$DOC" | grep -m3 IPAddress | cut -d '"' -f 4 | tr -d "\n")
+        printf "%s\t%s\n" "$DOC" "$IP"
+    done | column -t
+}
+
+# ============================================================================
+# DEVELOPMENT SHORTCUTS
+# ============================================================================
+
+# Angular
+alias ngs="ng serve"
+alias ngb="ng build"
+alias ngt="ng test"
+alias nge="ng e2e"
+alias ngg="ng generate"
+
+# Spring Boot
+alias sbr="./mvnw spring-boot:run"
+alias sbt="./mvnw test"
