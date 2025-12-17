@@ -5,7 +5,8 @@
 # Directory listing aliases
 alias lt='ls --human-readable --size -1 -S --classify'
 alias la='ls -Alh'
-alias ls='ls -aFh --color=always'
+#alias ls='ls -aFh --color=always'
+alias ls="eza --icons --group-directories-first"
 alias lx='ls -lXBh'
 alias lk='ls -lSrh'
 alias lc='ls -lcrh'
